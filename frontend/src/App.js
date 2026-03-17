@@ -23,7 +23,7 @@ const App = () => {
         '1D': { range: '1d', interval: '2m', delay: 50000 }, // 50 sec fetch
         '1W': { range: '5d', interval: '5m', delay: 100000 }, // 100 sec fetch
         '1M': { range: '1mo', interval: '1h', delay: 150000 },
-        '1Y': { range: '1y', interval: '1d', delay: 600000 },
+        '6M': { range: '6mo', interval: '1d', delay: 600000 },
     };
     useEffect(() => {
         if (!chartContainerRef.current) return;
@@ -87,11 +87,11 @@ const App = () => {
 
         const result = data.chart.result[0];
         const meta = result.meta;
-
+        const prev = meta.previousClose || 0.00;
         setMarketData({
             price: meta.regularMarketPrice.toLocaleString('en-IN', { minimumFractionDigits: 2 }),
-            change: (meta.regularMarketPrice - meta.previousClose).toFixed(2),
-            pChange: (((meta.regularMarketPrice - meta.previousClose) / meta.previousClose) * 100).toFixed(2),
+            change: (meta.regularMarketPrice - prev).toFixed(2),
+            pChange: (((meta.regularMarketPrice - prev) / (prev+1)) * 100).toFixed(2),
             high: meta.regularMarketDayHigh?.toLocaleString('en-IN') || "0.00",
             low: meta.regularMarketDayLow?.toLocaleString('en-IN') || "0.00",
             lastUpdated: new Date().toLocaleTimeString('en-IN', {
