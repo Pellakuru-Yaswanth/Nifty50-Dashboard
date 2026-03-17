@@ -71,10 +71,10 @@ const App = () => {
         const { range, interval } = timeframes[currentTimeframe];
         
         // Use query2 - it's often less guarded than query1
-        const targetURL = `https://query2.finance.yahoo.com/v8/finance/chart/^NSEI?interval=${interval}&range=${range}&includePrePost=true`;
+        const targetURL = `https://query1.finance.yahoo.com/v8/finance/chart/^NSEI?interval=${interval}&range=${range}`;
         
         // We use 'corsproxy.io' - it is currently the most stable for Yahoo Finance
-        const apiURL = `https://corsproxy.io/?${encodeURIComponent(targetURL)}`;
+        const apiURL = `https://api.allorigins.win/get?url=${encodeURIComponent(targetURL)}&timestamp=${new Date().getTime()}`;
 
         const response = await fetch(apiURL);
         
@@ -82,11 +82,11 @@ const App = () => {
         if (!response.ok) return;
 
         const data = await response.json();
+        if (!JSON.parse(data.contents)?.chart?.result) return;
 
-        if (!data?.chart?.result) return;
-
-        const result = data.chart.result[0];
+        const result = JSON.parse(data.contents).chart.result[0];
         const meta = result.meta;
+        console.log(meta);
         const prev = meta.previousClose || 0.00;
         setMarketData({
             price: meta.regularMarketPrice.toLocaleString('en-IN', { minimumFractionDigits: 2 }),
