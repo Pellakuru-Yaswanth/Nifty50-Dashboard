@@ -17,12 +17,12 @@ const App = () => {
         low: "0.00",
         lastUpdated: "Connecting..."
     });
-
+    //Intervals available: [1m, 2m, 5m, 15m, 30m, 60m, 90m, 1h, 4h, 1d, 5d, 1wk, 1mo, 3mo]
     const timeframes = {
         '1H': { range: '1h', interval: '1m', delay: 20000 }, // 20 sec fetch
         '1D': { range: '1d', interval: '2m', delay: 50000 }, // 50 sec fetch
         '1W': { range: '5d', interval: '5m', delay: 100000 }, // 100 sec fetch
-        '1M': { range: '1mo', interval: '1h', delay: 150000 },
+        '1M': { range: '1mo', interval: '60m', delay: 150000 },
         '6M': { range: '6mo', interval: '1d', delay: 600000 },
     };
     useEffect(() => {
@@ -70,21 +70,19 @@ const App = () => {
     try {
         const { range, interval } = timeframes[currentTimeframe];
         
-        // Use query2 - it's often less guarded than query1
-        const targetURL = `https://query1.finance.yahoo.com/v8/finance/chart/^NSEI?interval=${interval}&range=${range}`;
-        
-        // We use 'corsproxy.io' - it is currently the most stable for Yahoo Finance
-        const apiURL = `https://api.allorigins.win/get?url=${encodeURIComponent(targetURL)}&timestamp=${new Date().getTime()}`;
+        const apiURL = `https://nifty50-backend.vercel.app/api/nifty?range=${range}&interval=${interval}`;
 
         const response = await fetch(apiURL);
+        console.log(response);
         
         // If the proxy returns an error, stop immediately so we don't get the "Unexpected token <"
         if (!response.ok) return;
 
         const data = await response.json();
-        if (!JSON.parse(data.contents)?.chart?.result) return;
+        console.log(data);
+        if (!data.chart?.result) return;
 
-        const result = JSON.parse(data.contents).chart.result[0];
+        const result = data.chart.result[0];
         const meta = result.meta;
         console.log(meta);
         const prev = meta.previousClose || 0.00;
