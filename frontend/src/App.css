@@ -1,0 +1,146 @@
+/* Global Reset & Base */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0a0e17; /* Deepest blue/black */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #ffffff;
+}
+
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Header Styling */
+.market-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #1e222d;
+}
+
+.ticker-info .label {
+  font-size: 12px;
+  color: #707584;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.ticker-info .title {
+  margin: 5px 0 0 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #d1d4dc;
+}
+
+.price-container {
+  text-align: right;
+}
+
+.current-price {
+  font-size: 32px;
+  font-weight: 800;
+  font-family: 'Roboto Mono', monospace; /* Monospace keeps price from jumping */
+  letter-spacing: -1px;
+}
+
+.price-movement {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  font-weight: 600;
+  font-size: 16px;
+  margin-top: 4px;
+}
+
+.positive { color: #00ffaa; } /* Modern Green */
+.negative { color: #ff3a68; } /* Modern Red */
+
+/* Chart Section */
+.chart-section {
+  background-color: #131722;
+  border: 1px solid #1e222d;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.chart-canvas {
+  width: 100%;
+  height: 450px; /* Crucial: Matches the JS config */
+}
+
+/* Footer Stats */
+.market-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.stat-box {
+  background-color: #131722;
+  padding: 15px;
+  border: 1px solid #1e222d;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: #707584;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: #d1d4dc;
+}
+
+/* Update Responsive View */
+@media (max-width: 768px) {
+  .market-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  .price-container {
+    text-align: left;
+  }
+}
+.timeframe-selector {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.timeframe-selector button {
+    background: #1e222d;
+    border: 1px solid #363c4e;
+    color: #d1d4dc;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: 0.2s;
+}
+
+.timeframe-selector button.active {
+    background: #2962ff;
+    border-color: #2962ff;
+    color: white;
+}
+
+.timeframe-selector button:hover:not(.active) {
+    background: #2a2e39;
+}
