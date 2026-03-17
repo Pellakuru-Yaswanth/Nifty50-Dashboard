@@ -7,6 +7,7 @@ const App = () => {
     const seriesRef = useRef(null);
     const chartRef = useRef(null);
     const [currentTimeframe, setCurrentTimeframe] = useState('1D');
+    const [activeSection, setActiveSection] = useState('home');
     
     const [marketData, setMarketData] = useState({
         price: "0.00",
@@ -125,9 +126,90 @@ const App = () => {
         return () => clearInterval(interval);
     }, [currentTimeframe]);
 
+    const scrollToSection = (id) => {
+        const element = document.getElementById(id);
+        if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
+    useEffect(() => {
+        const sections = ['home', 'chart', 'contact'];
+        
+        const observerOptions = {
+        root: null,
+        rootMargin: '-50% 0px -50% 0px', // Detects section when it's in the middle of the screen
+        threshold: 0
+        };
+
+        const observerCallback = (entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+            }
+        });
+        };
+
+        const observer = new IntersectionObserver(observerCallback, observerOptions);
+        sections.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+        });
+
+        return () => observer.disconnect();
+    }, []);
+
     return (
         <div className="app-container">
-            <header className="market-header">
+            <nav className="navbar">
+                <div className="nav-logo">NIFTY<span>50</span></div>
+                <ul className="nav-links">
+                <li onClick={() => scrollToSection('home')} className={activeSection === 'home' ? 'active' : ''}>Home</li>
+                <li onClick={() => scrollToSection('chart')} className={activeSection === 'chart' ? 'active' : ''}>Chart</li>
+                <li onClick={() => scrollToSection('contact')} className={activeSection === 'contact' ? 'active' : ''}>Contact Us</li>
+                </ul>
+                <button className="nav-cta" onClick={() => scrollToSection('chart')}>
+                Go Live
+                </button>
+            </nav>
+            <div className="hero-container" id='home'>
+            {/* The background decorative elements */}
+                <div className="bg-glow"></div>
+                <div className="bg-grid"></div>
+
+                <div className="hero-content">
+                    <div className="badge">v2.0 Live</div>
+                    <h1 className="hero-title">
+                    The Next Generation <br /> 
+                    <span>Nifty 50</span> Analytics.
+                    </h1>
+                    <p className="hero-description">
+                    Experience lightning-fast market data, professional-grade charts, 
+                    and real-time tracking for India's benchmark index. Built for 
+                    speed, accuracy, and the modern trader.
+                    </p>
+                    
+                    <div className="hero-buttons">
+                    <button className="btn-primary" onClick={() => scrollToSection('chart')}>View Live Chart</button>
+                    </div>
+
+                    <div className="hero-metrics">
+                    <div className="metric">
+                        <span className="number">99.9%</span>
+                        <span className="label">Uptime</span>
+                    </div>
+                    <div className="metric">
+                        <span className="number">&lt; 100ms</span>
+                        <span className="label">Latency</span>
+                    </div>
+                    <div className="metric">
+                        <span className="number">Free</span>
+                        <span className="label">Forever</span>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <header className="market-header" id='chart'>
                 <div className="ticker-info">
                     <span className="label">Live Index</span>
                     <h1 className="title">NIFTY 50</h1>
@@ -168,9 +250,55 @@ const App = () => {
                 </div>
                 <div className="stat-box">
                     <span className="stat-label">Update Status</span>
-                    <span className="stat-value live-tag">{marketData.lastUpdated} (UTC+5:30)</span>
+                    <span className="stat-value live-tag">{marketData.lastUpdated}</span>
                 </div>
             </footer>
+            <footer className="main-footer" id="contact">
+                <div className="footer-content">
+                    <div className="footer-brand">
+                    <div className="nav-logo">NIFTY<span>50</span></div>
+                    <p>Providing real-time analytics and high-performance charting for India's benchmark index.</p>
+                    <div className="social-links">
+                        <a href="#"><i className="fab fa-twitter"></i></a>
+                        <a href="#"><i className="fab fa-linkedin"></i></a>
+                        <a href="#"><i className="fab fa-github"></i></a>
+                    </div>
+                    </div>
+
+                    <div className="footer-links">
+                    <h4>Platform</h4>
+                    <ul>
+                        <li onClick={() => scrollToSection('home')}>Home</li>
+                        <li onClick={() => scrollToSection('chart')}>Live Chart</li>
+                        <li>Market News</li>
+                    </ul>
+                    </div>
+
+                    <div className="footer-contact">
+                    <h4>Contact Us</h4>
+                    <div className="contact-item">
+                        <span className="icon">📍</span>
+                        <p>Financial District, Hyderabad, India</p>
+                    </div>
+                    <div className="contact-item">
+                        <span className="icon">📧</span>
+                        <p>support@nifty50live.com</p>
+                    </div>
+                    <div className="contact-item">
+                        <span className="icon">📞</span>
+                        <p>+91 98765 43210</p>
+                    </div>
+                    </div>
+                </div>
+
+                <div className="footer-bottom">
+                    <p>&copy; 2026 Nifty50 Analytics. All rights reserved.</p>
+                    <div className="footer-legal">
+                        <span>&ensp;Privacy Policy</span>
+                        <span>Terms of Service</span>
+                    </div>
+                </div>
+                </footer>
         </div>
     );
 };
